@@ -7,9 +7,40 @@
     "build": "next build",
     "start": "next start"
   },
+  "browser": {
+    "yamljs": false
+  },
   "dependencies": {
+    "@47ng/chakra-next": "^3.0.0-beta.2",
+    "@chakra-ui/react": "^1.0.4",
+    "@emotion/react": "^11.1.4",
+    "@emotion/styled": "^11.0.0",
+    "framer-motion": "^3.1.1",
+    "gitrows": "^0.8.0",
+    "got": "^11.8.1",
+    "metascraper": "^5.16.0",
+    "metascraper-author": "^5.16.0",
+    "metascraper-date": "^5.16.0",
+    "metascraper-description": "^5.16.0",
+    "metascraper-image": "^5.16.0",
+    "metascraper-logo": "^5.16.0",
+    "metascraper-title": "^5.16.0",
+    "metascraper-url": "^5.16.0",
+    "mitt": "^2.1.0",
     "next": "10.0.4",
+    "next-transpile-modules": "^6.0.0",
     "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react-dom": "17.0.1",
+    "react-icons": "^4.1.0",
+    "react-use": "^15.3.4",
+    "swr": "^0.3.11"
+  },
+  "devDependencies": {
+    "@types/metascraper": "^5.14.0",
+    "@types/node": "^14.14.16",
+    "@types/react": "^17.0.0",
+    "@types/react-dom": "^17.0.0",
+    "re2": "^1.15.9",
+    "typescript": "^4.1.3"
   }
 }
