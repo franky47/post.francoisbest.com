@@ -1,4 +1,5 @@
 import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { ColorModeScript } from '@chakra-ui/react'
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: any) {
@@ -18,6 +19,7 @@ class MyDocument extends Document {
           <script src="/gitrows.min.js"></script>
         </Head>
         <body>
+          <ColorModeScript initialColorMode="system" />
           <Main />
           <NextScript />
         </body>
