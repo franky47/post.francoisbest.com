@@ -4,7 +4,8 @@ import React from 'react'
 
 const theme = extendTheme({
   config: {
-    useSystemColorMode: true,
+    useSystemColorMode: false,
+    initialColorMode: 'dark',
   },
 })
 

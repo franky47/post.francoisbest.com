@@ -19,7 +19,7 @@ class MyDocument extends Document {
           <script src="/gitrows.min.js"></script>
         </Head>
         <body>
-          <ColorModeScript initialColorMode="system" />
+          <ColorModeScript initialColorMode="dark" />
           <Main />
           <NextScript />
         </body>
