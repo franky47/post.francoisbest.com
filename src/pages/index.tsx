@@ -31,7 +31,6 @@ export default function Home() {
   const toast = useToast({ variant: 'left-accent', position: 'bottom-right' })
   const [url, setUrl] = React.useState('')
   const [autoUnfurl] = useLocalSetting(settings.AUTO_UNFURL, false)
-
   const [isUnfurling, setUnfurling] = React.useState(false)
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
   const placeholder = isUnfurling ? 'Loading...' : undefined
@@ -187,10 +186,27 @@ export default function Home() {
           type="submit"
           colorScheme="green"
           leftIcon={<FiCheckSquare />}
+          size="lg"
+          display={['none', 'flex']}
           isLoading={pushing}
+          isDisabled={!url}
         >
           Post Link
         </Button>
+        <IconButton
+          type="submit"
+          aria-label="Post"
+          display={url ? ['flex', 'none'] : 'none'}
+          position="fixed"
+          bottom={4}
+          right={4}
+          icon={<FiCheckSquare size={24} />}
+          boxSize="64px"
+          rounded="full"
+          colorScheme="green"
+          shadow="lg"
+          isLoading={pushing}
+        />
       </Stack>
     </Layout>
   )
