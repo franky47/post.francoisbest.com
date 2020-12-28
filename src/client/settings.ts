@@ -1,10 +1,8 @@
 export const settings = {
   TOKEN: 'token',
-  REPO_SLUG: 'repoSlug',
-  FILE_PATH: 'filePath',
+  FILE_URL: 'fileUrl',
   AUTO_UNFURL: 'autoUnfurl',
   AUTHOR: 'author',
-  BRANCH: 'branch',
   USERNAME: 'username',
 }
 
@@ -13,5 +11,4 @@ export const settingsDefaults = {
     name: 'GitRows',
     email: 'api@gitrows.com',
   },
-  BRANCH: 'master',
 }

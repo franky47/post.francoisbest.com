@@ -1,6 +1,7 @@
 import React from 'react'
-import { settings, settingsDefaults } from 'src/settings'
+import { settings, settingsDefaults } from 'src/client/settings'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
+import { useGitHubURL } from 'src/hooks/useGitHubURL'
 
 export interface GitRowsResult {
   code: number
@@ -23,44 +24,36 @@ declare class Gitrows {
 
 export function useGitRows() {
   const [token] = useLocalSetting(settings.TOKEN)
+  const [fileURL] = useLocalSetting(settings.FILE_URL)
   const [author] = useLocalSetting(settings.AUTHOR, settingsDefaults.AUTHOR)
-  const [branch] = useLocalSetting(settings.BRANCH, settingsDefaults.BRANCH)
   const [user] = useLocalSetting(settings.USERNAME)
   const [gitrows, setGitrows] = React.useState<Gitrows | null>(null)
+  const meta = useGitHubURL(fileURL)
   React.useEffect(() => {
     const instance = new Gitrows({
       user,
       token,
-      branch,
+      branch: meta?.branch ?? undefined,
       author,
       strict: true,
     })
     setGitrows(instance)
-  }, [token, author, branch, user])
+  }, [token, author, user, meta])
   return gitrows
 }
 
-export function useGitRowsPath(repo: string, branch: string, filePath: string) {
-  const filePathNoSlash = (filePath ?? '').replace(/^\//, '')
-  return `@github/${repo}#${branch}/${filePathNoSlash}`
-}
-
-export function useGitRowsTest(constraints?: any) {
-  const [repo] = useLocalSetting(settings.REPO_SLUG)
-  const [branch] = useLocalSetting(settings.BRANCH, settingsDefaults.BRANCH)
+export function useGitRowsTest() {
+  const [fileUrl] = useLocalSetting(settings.FILE_URL)
   const gitrows = useGitRows()
-  return (filePath: string) => {
-    const path = useGitRowsPath(repo, branch, filePath)
-    return gitrows!.test(path, constraints)
+  return () => {
+    return gitrows!.test(fileUrl)
   }
 }
 
-export function useGitRowsPush<T>(filePath: string, columns: (keyof T)[]) {
-  const [repo] = useLocalSetting(settings.REPO_SLUG)
-  const [branch] = useLocalSetting(settings.BRANCH, settingsDefaults.BRANCH)
+export function useGitRowsPush<T>(columns: (keyof T)[]) {
+  const [fileUrl] = useLocalSetting(settings.FILE_URL)
   const gitrows = useGitRows()
   return (data: Partial<T>, options: object = {}) => {
-    const path = useGitRowsPath(repo, branch, filePath)
     const _options = {
       columns: ['timestamp', ...columns],
       ...options,
@@ -75,6 +68,6 @@ export function useGitRowsPush<T>(filePath: string, columns: (keyof T)[]) {
       // @ts-ignore
       payload[column] = encodeURIComponent(payload[column])
     }
-    return gitrows!.put(path, payload)
+    return gitrows!.put(fileUrl, payload)
   }
 }

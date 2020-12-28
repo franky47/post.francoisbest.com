@@ -13,16 +13,17 @@ import {
   Box,
   FormHelperText,
   useToast,
+  Spinner,
 } from '@chakra-ui/react'
 import type { Metadata } from 'metascraper'
 import { FiCheckSquare, FiDownloadCloud } from 'react-icons/fi'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
 import { useGitRowsPush } from 'src/hooks/useGitRows'
-import { unfurl } from 'src/unfurl'
+import { unfurl } from 'src/client/unfurl'
 import { OgImagePreview } from 'src/components/OgImagePreview'
 import { Layout } from 'src/components/Layout'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
-import { settings } from 'src/settings'
+import { settings } from 'src/client/settings'
 import { useDebounce } from 'react-use'
 
 export default function Home() {
@@ -30,11 +31,11 @@ export default function Home() {
   const toast = useToast({ variant: 'left-accent', position: 'bottom-right' })
   const [url, setUrl] = React.useState('')
   const [autoUnfurl] = useLocalSetting(settings.AUTO_UNFURL, false)
-  const [filePath] = useLocalSetting(settings.FILE_PATH)
-  const [unfurling, setUnfurling] = React.useState(false)
+
+  const [isUnfurling, setUnfurling] = React.useState(false)
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
-  const placeholder = unfurling ? 'Loading...' : undefined
-  const push = useGitRowsPush(filePath, [
+  const placeholder = isUnfurling ? 'Loading...' : undefined
+  const push = useGitRowsPush([
     'author',
     'date',
     'description',
@@ -107,11 +108,11 @@ export default function Home() {
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
+              size="lg"
             />
-            <InputRightElement>
+            <InputRightElement boxSize={12}>
               <IconButton
                 onClick={runUnfurling}
-                size="sm"
                 rounded="full"
                 variant="ghost"
                 icon={<FiDownloadCloud />}
@@ -125,39 +126,62 @@ export default function Home() {
         </FormControl>
         <FormControl>
           <FormLabel>Title</FormLabel>
-          <Input
-            placeholder={placeholder}
-            value={meta.title ?? ''}
-            onChange={(e) =>
-              setMeta((meta) => ({ ...meta, title: e.target.value }))
-            }
-          />
+          <InputGroup>
+            <Input
+              placeholder={placeholder}
+              value={meta.title ?? ''}
+              onChange={(e) =>
+                setMeta((meta) => ({ ...meta, title: e.target.value }))
+              }
+            />
+            {isUnfurling && (
+              <InputRightElement>
+                <Box>
+                  <Spinner size="sm" />
+                </Box>
+              </InputRightElement>
+            )}
+          </InputGroup>
         </FormControl>
         <FormControl>
           <FormLabel>Author</FormLabel>
-          <Input
-            placeholder={placeholder}
-            value={meta.author ?? ''}
-            onChange={(e) =>
-              setMeta((meta) => ({ ...meta, author: e.target.value }))
-            }
-          />
+          <InputGroup>
+            <Input
+              placeholder={placeholder}
+              value={meta.author ?? ''}
+              onChange={(e) =>
+                setMeta((meta) => ({ ...meta, author: e.target.value }))
+              }
+            />
+            {isUnfurling && (
+              <InputRightElement>
+                <Box>
+                  <Spinner size="sm" />
+                </Box>
+              </InputRightElement>
+            )}
+          </InputGroup>
         </FormControl>
         <FormControl>
           <FormLabel>Description</FormLabel>
-          <Textarea
-            placeholder={placeholder}
-            value={meta.description ?? ''}
-            onChange={(e) =>
-              setMeta((meta) => ({ ...meta, description: e.target.value }))
-            }
-          />
+          <Box pos="relative">
+            <Textarea
+              placeholder={placeholder}
+              value={meta.description ?? ''}
+              onChange={(e) =>
+                setMeta((meta) => ({ ...meta, description: e.target.value }))
+              }
+            />
+            {isUnfurling && (
+              <Spinner size="sm" pos="absolute" right={3} top={3} />
+            )}
+          </Box>
         </FormControl>
         <Box mb={4}>
           <Heading as="h3" fontSize="lg" mb={4}>
             OpenGraph Image Preview
           </Heading>
-          <OgImagePreview loading={unfurling} src={meta.image ?? ''} />
+          <OgImagePreview loading={isUnfurling} src={meta.image ?? ''} />
         </Box>
         <Button
           type="submit"

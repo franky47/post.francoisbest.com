@@ -17,8 +17,9 @@ import {
 import { FiUploadCloud } from 'react-icons/fi'
 import { OutgoingLink } from '@47ng/chakra-next'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
+import { useGitHubURL } from 'src/hooks/useGitHubURL'
 import { useGitRowsTest } from 'src/hooks/useGitRows'
-import { settings, settingsDefaults } from 'src/settings'
+import { settings, settingsDefaults } from 'src/client/settings'
 import { Layout } from 'src/components/Layout'
 
 const SettingsPage: NextPage = () => {
@@ -28,24 +29,19 @@ const SettingsPage: NextPage = () => {
     false
   )
   const [token, setToken] = useLocalSetting(settings.TOKEN)
-  const [repoSlug, setRepoSlug] = useLocalSetting(settings.REPO_SLUG)
-  const [filePath, setFilePath] = useLocalSetting(settings.FILE_PATH)
+  const [fileURL, setFileURL] = useLocalSetting(settings.FILE_URL)
   const [author, setAuthor] = useLocalSetting(
     settings.AUTHOR,
     settingsDefaults.AUTHOR
   )
-  const [branch, setBranch] = useLocalSetting(
-    settings.BRANCH,
-    settingsDefaults.BRANCH
-  )
   const [username, setUsername] = useLocalSetting(settings.USERNAME)
   const [loading, setLoading] = React.useState(false)
-
+  const meta = useGitHubURL(fileURL)
   const test = useGitRowsTest()
   const testConnection = (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
-    test(filePath)
+    test()
       .then((result: any) => {
         if (result.valid) {
           toast({
@@ -57,26 +53,18 @@ const SettingsPage: NextPage = () => {
                 <Text fontSize="sm">
                   Links will be saved in
                   <br />
-                  <OutgoingLink
-                    href={`https://github.com/${repoSlug}/blob/${branch}/${filePath}`}
-                  >
-                    <Code lineHeight={1.6} fontSize="xs" px={2}>
-                      {repoSlug}
-                    </Code>
-                  </OutgoingLink>
+                  <Code lineHeight={1.6} fontSize="xs" px={2}>
+                    {meta?.slug}
+                  </Code>
                   {' on branch '}
                   <Code lineHeight={1.6} fontSize="xs" px={2}>
-                    {branch}
+                    {meta?.branch}
                   </Code>
                   <br />
                   {' in file '}
-                  <OutgoingLink
-                    href={`https://github.com/${repoSlug}/blob/${branch}/${filePath}`}
-                  >
-                    <Code lineHeight={1.6} fontSize="xs" px={2}>
-                      {filePath}
-                    </Code>
-                  </OutgoingLink>
+                  <Code lineHeight={1.6} fontSize="xs" px={2}>
+                    {meta?.path}
+                  </Code>
                 </Text>
               </>
             ),
@@ -105,6 +93,10 @@ const SettingsPage: NextPage = () => {
         <Heading as="h3" fontSize="2xl">
           Connect your repository
         </Heading>
+        <Text color="gray.300">
+          Your unfurled links are committed to a CSV file in a GitHub
+          repository.
+        </Text>
         <FormControl isRequired>
           <FormLabel>GitHub Token</FormLabel>
           <Input
@@ -129,25 +121,16 @@ const SettingsPage: NextPage = () => {
           </FormHelperText>
         </FormControl>
         <FormControl isRequired>
-          <FormLabel>Repository</FormLabel>
+          <FormLabel>File URL</FormLabel>
           <Input
-            value={repoSlug ?? ''}
-            onChange={(e) => setRepoSlug(e.target.value)}
+            value={fileURL ?? ''}
+            onChange={(e) => setFileURL(e.target.value)}
             fontFamily="mono"
-            placeholder="foo/bar"
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormLabel>File Path</FormLabel>
-          <Input
-            value={filePath ?? ''}
-            onChange={(e) => setFilePath(e.target.value)}
-            fontFamily="mono"
-            placeholder="links.csv"
+            placeholder="https://github.com/owner/repo/blob/branch/file.csv"
           />
           <FormHelperText>
-            Path to a CSV file in your repo. Must exist and have the following
-            header:
+            Full URL to a CSV file in a GitHub repository. Must have the
+            following header:
             <br />
             <Code
               px={2}
@@ -156,11 +139,24 @@ const SettingsPage: NextPage = () => {
               opacity={0.75}
               fontSize="xs"
               fontWeight="medium"
+              wordBreak="break-word"
             >
               timestamp,url,author,date,description,image,title
             </Code>
           </FormHelperText>
         </FormControl>
+        <Button
+          type="submit"
+          colorScheme="green"
+          isLoading={loading}
+          leftIcon={<FiUploadCloud />}
+        >
+          Test Connection
+        </Button>
+        <Divider />
+        <Heading as="h3" fontSize="2xl">
+          Git Settings
+        </Heading>
         <FormControl>
           <FormLabel>GitHub Username</FormLabel>
           <Input
@@ -189,21 +185,6 @@ const SettingsPage: NextPage = () => {
             onChange={(e) => setAuthor({ ...author, email: e.target.value })}
           />
         </FormControl>
-        <FormControl mb={4}>
-          <FormLabel>Git Branch</FormLabel>
-          <Input
-            value={branch ?? ''}
-            onChange={(e) => setBranch(e.target.value)}
-          />
-        </FormControl>
-        <Button
-          type="submit"
-          colorScheme="green"
-          isLoading={loading}
-          leftIcon={<FiUploadCloud />}
-        >
-          Test Connection
-        </Button>
       </Stack>
     </Layout>
   )
