@@ -3018,7 +3018,7 @@ glob@^7.0.5, glob@^7.1.3, glob@^7.1.4:
     once "^1.3.0"
     path-is-absolute "^1.0.0"
 
-got@^11.8.1:
+got@^11.8.1, got@~11.8.1:
   version "11.8.1"
   resolved "https://registry.yarnpkg.com/got/-/got-11.8.1.tgz#df04adfaf2e782babb3daabc79139feec2f7e85d"
   integrity sha512-9aYdZL+6nHmvJwHALLwKSUZ0hMwGaJGYv3hoPLPgnT8BoBXm1SjnZeky+91tfwJaDzun2s4RsBRy48IEYv2q2Q==
@@ -3864,6 +3864,22 @@ metascraper-image@^5.16.0:
   dependencies:
     "@metascraper/helpers" "^5.16.0"
 
+metascraper-lang@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/metascraper-lang/-/metascraper-lang-5.16.0.tgz#fd3f6d6967a3ac6861e47e1335ad4c9b0ad7eff0"
+  integrity sha512-h05jdLP34dBkRLhTXa7aoBrOILo1Fpjg18WWRnu2eFFcSWPLqXnLKawC2XMCfwCD1OJg4pQV0AqkDzouIb6HJA==
+  dependencies:
+    "@metascraper/helpers" "^5.16.0"
+
+metascraper-logo-favicon@^5.16.3:
+  version "5.16.3"
+  resolved "https://registry.yarnpkg.com/metascraper-logo-favicon/-/metascraper-logo-favicon-5.16.3.tgz#dd6afed6d3219dbaebda2c5ebe7a338ff3cdcf2f"
+  integrity sha512-AyfJ7tyXcagj0mjTWZZTQq+RdbIHSnv0ekuNIghmmAAMHW4wMZUqzmHxbauJw7g1+b/9k3JTXvrTBF+ch3084w==
+  dependencies:
+    "@metascraper/helpers" "^5.16.0"
+    got "~11.8.1"
+    lodash "~4.17.20"
+
 metascraper-logo@^5.16.0:
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/metascraper-logo/-/metascraper-logo-5.16.0.tgz#859038c9e823345c0a226235e0ad76f2cc33215c"
@@ -3871,17 +3887,17 @@ metascraper-logo@^5.16.0:
   dependencies:
     "@metascraper/helpers" "^5.16.0"
 
+metascraper-publisher@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/metascraper-publisher/-/metascraper-publisher-5.16.0.tgz#f83101535eab72f8f3ca6d0630690651729d71e9"
+  integrity sha512-afwkGJDmUNfOaK7b2V5busjdd+X4licQYjEXD8B0bjvfTyyoJqQGSd21N5AZhITuwVsVWzIyaK0bb4Hn9rqMnA==
+  dependencies:
+    "@metascraper/helpers" "^5.16.0"
+
 metascraper-title@^5.16.0:
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/metascraper-title/-/metascraper-title-5.16.0.tgz#b442c48d4ec9d25503c98e39c97d13daed17a51c"
   integrity sha512-COMFEvTio2XXcSvRgOJTlvn3bqbzr0OkcrDYPF9Ra317OX48KvEd/aJJpyxceSj8GN18hu+/6Zkxve4EjQqY3w==
-  dependencies:
-    "@metascraper/helpers" "^5.16.0"
-
-metascraper-url@^5.16.0:
-  version "5.16.0"
-  resolved "https://registry.yarnpkg.com/metascraper-url/-/metascraper-url-5.16.0.tgz#30305290f76db9373c0f19c5a51673fa7151297e"
-  integrity sha512-YVmkcSWGSWWa6E+9rRbblAaenAXdfsiXjH+2bKaMq96EZZaQxcCHMMv5yg5/rEGWWXrKaLttVu66owjwpv5eSg==
   dependencies:
     "@metascraper/helpers" "^5.16.0"
 
