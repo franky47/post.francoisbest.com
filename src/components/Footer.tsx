@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ ...props }) => {
         </OutgoingLink>{' '}
         - Source on{' '}
         <OutgoingLink
-          href="https://github.com/franky47/gitcms"
+          href="https://github.com/franky47/post.francoisbest.com"
           textDecor="underline"
         >
           GitHub
