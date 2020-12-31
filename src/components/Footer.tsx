@@ -18,7 +18,10 @@ export const Footer: React.FC<FooterProps> = ({ ...props }) => {
           textDecor="underline"
         >
           GitHub
-        </OutgoingLink>
+        </OutgoingLink>{' '}
+        <Text as="span" fontFamily="mono" fontSize="xs">
+          ({(process.env.NEXT_PUBLIC_GIT_SHA1 ?? 'local').slice(0, 8)})
+        </Text>
       </Text>
     </Box>
   )
