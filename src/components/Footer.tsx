@@ -4,6 +4,8 @@ import { OutgoingLink } from '@47ng/chakra-next'
 
 export interface FooterProps extends BoxProps {}
 
+console.log(`NEXT_PUBLIC_GIT_SHA1: ${process.env.NEXT_PUBLIC_GIT_SHA1}`)
+
 export const Footer: React.FC<FooterProps> = ({ ...props }) => {
   return (
     <Box as="footer" textAlign="center" {...props}>
