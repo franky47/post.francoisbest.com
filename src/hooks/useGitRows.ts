@@ -2,6 +2,7 @@ import React from 'react'
 import { settings, settingsDefaults } from 'src/client/settings'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
 import { useGitHubURL } from 'src/hooks/useGitHubURL'
+import { Metadata } from 'src/client/unfurl'
 
 export interface GitRowsResult {
   code: number
@@ -14,10 +15,15 @@ declare global {
   }
 }
 
+export interface Row extends Metadata {
+  url: string
+  timestamp: number
+}
+
 declare class Gitrows {
   constructor(options: any)
   options: (options: any) => void
-  get: (path: string) => Promise<GitRowsResult>
+  get: (path: string, filters?: any) => Promise<Row[]>
   put: (path: string, data: any) => Promise<GitRowsResult>
   test: (path: string, constraints?: any) => Promise<GitRowsResult>
 }
@@ -47,6 +53,15 @@ export function useGitRowsTest() {
   const gitrows = useGitRows()
   return () => {
     return gitrows!.test(fileUrl)
+  }
+}
+
+export function useGitRowsHasURL() {
+  const [fileUrl] = useLocalSetting(settings.FILE_URL)
+  const gitrows = useGitRows()
+  return async (url: string) => {
+    const res = await gitrows!.get(fileUrl)
+    return res.some((row) => row.url === url)
   }
 }
 

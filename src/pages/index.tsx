@@ -18,7 +18,7 @@ import {
 import type { Metadata } from 'metascraper'
 import { FiCheckSquare, FiDownloadCloud } from 'react-icons/fi'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
-import { useGitRowsPush } from 'src/hooks/useGitRows'
+import { useGitRowsHasURL, useGitRowsPush } from 'src/hooks/useGitRows'
 import { unfurl } from 'src/client/unfurl'
 import { OgImagePreview } from 'src/components/OgImagePreview'
 import { Layout } from 'src/components/Layout'
@@ -34,6 +34,8 @@ export default function Home() {
   const [isUnfurling, setUnfurling] = React.useState(false)
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
   const placeholder = isUnfurling ? 'Loading...' : undefined
+  const checkDuplicate = useGitRowsHasURL()
+  const [duplicate, setDuplicate] = React.useState(false)
   const push = useGitRowsPush([
     'author',
     'date',
@@ -57,6 +59,22 @@ export default function Home() {
     },
     500,
     [url, autoUnfurl]
+  )
+
+  useDebounce(
+    () => {
+      if (!url) {
+        setDuplicate(false)
+        return
+      }
+      checkDuplicate(url)
+        .then((result) => {
+          setDuplicate(!!result)
+        })
+        .catch(console.error)
+    },
+    500,
+    [url, checkDuplicate]
   )
 
   const submit = (e: React.FormEvent) => {
@@ -108,6 +126,7 @@ export default function Home() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
               size="lg"
+              isInvalid={duplicate}
             />
             <InputRightElement boxSize={12}>
               <IconButton
@@ -119,6 +138,11 @@ export default function Home() {
               />
             </InputRightElement>
           </InputGroup>
+          {duplicate && (
+            <FormHelperText color="red.400">
+              This link was already saved.
+            </FormHelperText>
+          )}
           <FormHelperText>
             Click the cloud icon to populate fields from the URL.
           </FormHelperText>
@@ -189,7 +213,7 @@ export default function Home() {
           size="lg"
           display={['none', 'flex']}
           isLoading={pushing}
-          isDisabled={!url}
+          isDisabled={!url || duplicate}
         >
           Post Link
         </Button>
@@ -206,6 +230,7 @@ export default function Home() {
           colorScheme="green"
           shadow="lg"
           isLoading={pushing}
+          isDisabled={duplicate}
         />
       </Stack>
     </Layout>
