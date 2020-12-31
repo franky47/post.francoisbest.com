@@ -38,10 +38,13 @@ export default function Home() {
   const [duplicate, setDuplicate] = React.useState(false)
   const push = useGitRowsPush([
     'author',
-    'date',
+    'title',
     'description',
     'image',
-    'title',
+    'date',
+    'lang',
+    'logo',
+    'twitter',
     'url',
   ])
   const [pushing, setPushing] = React.useState(false)

@@ -60,8 +60,9 @@ export function useGitRowsHasURL() {
   const [fileUrl] = useLocalSetting(settings.FILE_URL)
   const gitrows = useGitRows()
   return async (url: string) => {
+    const ref = encodeURIComponent(url)
     const res = await gitrows!.get(fileUrl)
-    return res.some((row) => row.url === url)
+    return res.some((row) => row.url === ref)
   }
 }
 

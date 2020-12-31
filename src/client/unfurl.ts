@@ -6,6 +6,7 @@ export type Metadata = Pick<
 > & {
   logo?: string
   lang?: string
+  twitter?: string
 }
 
 export async function unfurl(url: string): Promise<Metadata> {
