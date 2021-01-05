@@ -1,6 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import { Dict } from '@chakra-ui/utils'
-import { getColor, mode, transparentize, darken } from '@chakra-ui/theme-tools'
+import { getColor, mode, darken } from '@chakra-ui/theme-tools'
 import Head from 'next/head'
 import React from 'react'
 
@@ -19,8 +19,7 @@ const theme = extendTheme({
           const { theme, colorScheme: c } = props
           const lightBg = getColor(theme, `${c}.100`, c)
           const darkBg = darken(`${c}.900`, 1)(theme)
-          const withAlpha = transparentize(darkBg, 0.9)(theme)
-          const bg = mode(lightBg, withAlpha)(props)
+          const bg = mode(lightBg, darkBg)(props)
           return {
             container: {
               bg,
