@@ -153,7 +153,9 @@ export default function Home() {
         <FormControl>
           <FormLabel>Title</FormLabel>
           <InputGroup>
-            <Input
+            <Textarea
+              resize="vertical"
+              rows={2}
               placeholder={placeholder}
               value={meta.title ?? ''}
               onChange={(e) =>
