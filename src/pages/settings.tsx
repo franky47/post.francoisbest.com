@@ -19,7 +19,7 @@ import { OutgoingLink } from '@47ng/chakra-next'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
 import { useGitHubURL } from 'src/hooks/useGitHubURL'
 import { useGitRowsTest } from 'src/hooks/useGitRows'
-import { settings, settingsDefaults } from 'src/client/settings'
+import { csvColumns, settings, settingsDefaults } from 'src/client/settings'
 import { Layout } from 'src/components/Layout'
 
 const SettingsPage: NextPage = () => {
@@ -141,7 +141,7 @@ const SettingsPage: NextPage = () => {
               fontWeight="medium"
               wordBreak="break-word"
             >
-              timestamp,url,author,date,description,image,title
+              {csvColumns.join(',')}
             </Code>
           </FormHelperText>
         </FormControl>

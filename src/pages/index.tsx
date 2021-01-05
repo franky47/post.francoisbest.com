@@ -23,7 +23,7 @@ import { unfurl } from 'src/client/unfurl'
 import { OgImagePreview } from 'src/components/OgImagePreview'
 import { Layout } from 'src/components/Layout'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
-import { settings } from 'src/client/settings'
+import { csvColumns, settings } from 'src/client/settings'
 import { useDebounce } from 'react-use'
 
 export default function Home() {
@@ -36,17 +36,7 @@ export default function Home() {
   const placeholder = isUnfurling ? 'Loading...' : undefined
   const checkDuplicate = useGitRowsHasURL()
   const [duplicate, setDuplicate] = React.useState(false)
-  const push = useGitRowsPush([
-    'author',
-    'title',
-    'description',
-    'image',
-    'date',
-    'lang',
-    'logo',
-    'twitter',
-    'url',
-  ])
+  const push = useGitRowsPush(csvColumns)
   const [pushing, setPushing] = React.useState(false)
 
   useDebounce(

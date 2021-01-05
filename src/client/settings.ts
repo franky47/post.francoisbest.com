@@ -12,3 +12,16 @@ export const settingsDefaults = {
     email: 'api@gitrows.com',
   },
 }
+
+export const csvColumns = [
+  'author',
+  'date',
+  'description',
+  'image',
+  'lang',
+  'logo',
+  'timestamp',
+  'title',
+  'twitter',
+  'url',
+]
