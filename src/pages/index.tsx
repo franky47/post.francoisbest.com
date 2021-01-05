@@ -227,6 +227,7 @@ export default function Home() {
           aria-label="Post"
           display={url ? ['flex', 'none'] : 'none'}
           position="fixed"
+          zIndex="sticky"
           bottom={4}
           right={4}
           icon={<FiCheckSquare size={24} />}
