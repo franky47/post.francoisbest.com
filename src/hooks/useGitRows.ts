@@ -56,14 +56,24 @@ export function useGitRowsTest() {
   }
 }
 
-export function useGitRowsHasURL() {
+export function useGitRowsGet() {
   const [fileUrl] = useLocalSetting(settings.FILE_URL)
   const gitrows = useGitRows()
-  return async (url: string) => {
-    const ref = encodeURIComponent(url)
-    const res = await gitrows!.get(fileUrl)
-    return res.some((row) => row.url === ref)
-  }
+  return React.useCallback(async () => {
+    return (await gitrows?.get(fileUrl)) ?? []
+  }, [gitrows])
+}
+
+export function useGitRowsHasURL() {
+  const get = useGitRowsGet()
+  return React.useCallback(
+    async (url: string) => {
+      const ref = encodeURIComponent(url)
+      const res = await get()
+      return res.some((row) => row.url === ref)
+    },
+    [get]
+  )
 }
 
 export function useGitRowsPush<T>(columns: (keyof T)[]) {

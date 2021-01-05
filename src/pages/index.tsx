@@ -25,6 +25,7 @@ import { Layout } from 'src/components/Layout'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
 import { csvColumns, settings } from 'src/client/settings'
 import { useDebounce } from 'react-use'
+import { Stats, useStats } from 'src/components/Stats'
 
 export default function Home() {
   useAuthRedirect()
@@ -38,6 +39,7 @@ export default function Home() {
   const [duplicate, setDuplicate] = React.useState(false)
   const push = useGitRowsPush(csvColumns)
   const [pushing, setPushing] = React.useState(false)
+  const [stats, updateStats] = useStats()
 
   useDebounce(
     () => {
@@ -70,23 +72,7 @@ export default function Home() {
     [url, checkDuplicate]
   )
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault()
-    setPushing(true)
-    push(
-      {
-        ...meta,
-        url,
-      },
-      {
-        message: `gitrows: Add ${url}`,
-      }
-    )
-      .then(reset)
-      .catch(console.error)
-      .finally(() => setPushing(false))
-  }
-  const runUnfurling = () => {
+  const runUnfurling = React.useCallback(() => {
     if (!url) {
       return
     }
@@ -95,22 +81,50 @@ export default function Home() {
       .then(setMeta)
       .catch(console.error)
       .finally(() => setUnfurling(false))
-  }
-  const reset = () => {
-    toast({
-      status: 'success',
-      title: 'Link posted',
-      isClosable: true,
-      duration: 1500,
-    })
+  }, [url, unfurl])
+  const reset = React.useCallback(() => {
     setUrl('')
     setMeta({})
     window.scrollTo({ top: 0, behavior: 'smooth' })
-  }
+    updateStats()
+  }, [updateStats])
+
+  const submit = React.useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault()
+      setPushing(true)
+      push(
+        {
+          ...meta,
+          url,
+        },
+        {
+          message: `gitrows: Add ${url}`,
+        }
+      )
+        .then(() => {
+          toast({
+            status: 'success',
+            title: 'Link posted',
+            isClosable: true,
+            duration: 1500,
+          })
+          reset()
+        })
+        .catch(console.error)
+        .finally(() => setPushing(false))
+    },
+    [push, toast, reset, meta, url]
+  )
+
+  React.useEffect(() => {
+    updateStats()
+  }, [updateStats])
 
   return (
     <Layout title="Post new link">
       <Stack as="form" spacing={6} onSubmit={submit}>
+        <Stats {...stats} />
         <FormControl isRequired>
           <FormLabel>URL</FormLabel>
           <InputGroup>
