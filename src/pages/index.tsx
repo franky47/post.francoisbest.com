@@ -16,7 +16,7 @@ import {
   Spinner,
 } from '@chakra-ui/react'
 import type { Metadata } from 'metascraper'
-import { FiCheckSquare, FiDownloadCloud } from 'react-icons/fi'
+import { FiCheckSquare, FiDownloadCloud, FiX } from 'react-icons/fi'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
 import { useGitRowsHasURL, useGitRowsPush } from 'src/hooks/useGitRows'
 import { unfurl } from 'src/client/unfurl'
@@ -137,11 +137,11 @@ export default function Home() {
             />
             <InputRightElement boxSize={12}>
               <IconButton
-                onClick={runUnfurling}
+                onClick={duplicate ? reset : runUnfurling}
                 rounded="full"
                 variant="ghost"
-                icon={<FiDownloadCloud />}
-                aria-label="Unfurl"
+                icon={duplicate ? <FiX /> : <FiDownloadCloud />}
+                aria-label={duplicate ? 'Clear' : 'Unfurl'}
               />
             </InputRightElement>
           </InputGroup>
