@@ -134,6 +134,13 @@ export default function Home() {
               placeholder="https://example.com"
               size="lg"
               isInvalid={duplicate}
+              onPaste={(event) => {
+                event.preventDefault()
+                const pastedText = event.clipboardData.getData('text')
+                const url = new URL(pastedText)
+                url.searchParams.delete('utm_source')
+                setUrl(url.toString())
+              }}
             />
             <InputRightElement boxSize={12}>
               <IconButton
