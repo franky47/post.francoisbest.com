@@ -41,6 +41,7 @@ export default async function unfurl(
     },
   })
   const { publisher, ...meta } = await metascraper({ url, html })
+  res.setHeader('cache-control', 'public, max-age:86400')
   res.json({
     ...meta,
     author: meta.author || publisher,
