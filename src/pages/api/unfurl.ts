@@ -35,7 +35,11 @@ export default async function unfurl(
   res: NextApiResponse
 ) {
   const url = req.query.url as string
-  const { body: html } = await got(url)
+  const { body: html } = await got(url, {
+    headers: {
+      'user-agent': `post.francoisbest.com/api/unfurl (https://github.com/franky47/post.francoisbest.com)`,
+    },
+  })
   const { publisher, ...meta } = await metascraper({ url, html })
   res.json({
     ...meta,
