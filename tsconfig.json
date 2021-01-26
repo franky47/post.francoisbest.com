@@ -30,11 +30,7 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "paths": {
-      "spotify:*": ["./src/data/.storage/spotify/spotify:*"],
-      "twitter:*": ["./src/data/.storage/twitter/*"],
-      "unsplash:*": ["./src/data/.storage/unsplash/*"],
-      "github:*": ["./src/data/.storage/github/*"],
-      "npm:*": ["./src/data/.storage/npm/*"],
+      "src/*": ["./src/*"]
     }
   },
   "include": ["./src/**/*.ts", "./src/**/*.tsx"],

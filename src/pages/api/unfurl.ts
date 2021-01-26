@@ -30,20 +30,26 @@ const metascraper = Metascraper([
   },
 ])
 
-export default async function unfurl(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  const url = req.query.url as string
+// --
+
+export async function unfurl(url: string) {
   const { body: html } = await got(url, {
     headers: {
       'user-agent': `post.francoisbest.com/api/unfurl (https://github.com/franky47/post.francoisbest.com)`,
     },
   })
   const { publisher, ...meta } = await metascraper({ url, html })
-  res.setHeader('cache-control', 'public, max-age:86400')
-  res.json({
+  return {
     ...meta,
     author: meta.author || publisher,
-  })
+  }
+}
+
+// --
+
+export default async function (req: NextApiRequest, res: NextApiResponse) {
+  const url = req.query.url as string
+  const result = await unfurl(url)
+  res.setHeader('cache-control', 'public, max-age:86400')
+  res.json(result)
 }

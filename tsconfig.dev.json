@@ -1,0 +1,11 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "es2020",
+    "module": "commonjs",
+    "outDir": "./build",
+    "resolveJsonModule": false,
+    "noEmit": false,
+  },
+  "include": ["./src/analysis/**/*.ts"]
+}
