@@ -118,11 +118,10 @@ async function main() {
   })
 
   const stats = {
-    articlesCount: savedArticles.length,
+    articlesCount: savedArticles.length - failedToLoad.length,
     missing: {
       title: countMissing('title', liveArticles),
       description: countMissing('description', liveArticles),
-      date: countMissing('date', savedArticles),
       author: countMissing('author', liveArticles),
       image: countMissing('image', liveArticles),
     },
@@ -133,6 +132,21 @@ async function main() {
       titleLength: minMaxAvgLength('title', savedArticles),
       descriptionLength: minMaxAvgLength('description', savedArticles),
       hasTwitter: countPresent('twitter', liveArticles),
+      date: {
+        none: countMissing('date', savedArticles),
+        dateOnly: liveArticles.filter((article) => {
+          if (!article.date) {
+            return false
+          }
+          return article.date.slice(10) === 'T00:00:00.000Z'
+        }).length,
+        dateTime: liveArticles.filter((article) => {
+          if (!article.date) {
+            return false
+          }
+          return article.date.slice(10) !== 'T00:00:00.000Z'
+        }).length,
+      },
     },
     failedToLoad,
     leaderboards: {
@@ -141,7 +155,7 @@ async function main() {
     },
   }
 
-  console.dir(stats, { depth: Infinity })
+  console.log(JSON.stringify(stats))
 }
 
 main()
