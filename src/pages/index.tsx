@@ -205,6 +205,7 @@ export default function Home() {
           <FormLabel>Description</FormLabel>
           <Box pos="relative">
             <Textarea
+              minH={[48, 32]}
               placeholder={placeholder}
               value={meta.description ?? ''}
               onChange={(e) =>
