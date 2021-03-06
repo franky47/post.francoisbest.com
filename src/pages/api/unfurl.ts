@@ -1,11 +1,21 @@
-import type { NextApiRequest, NextApiResponse } from 'next'
-import Metascraper from 'metascraper'
-import got from 'got'
 import type Cheerio from 'cheerio'
+import got from 'got'
+import Metascraper from 'metascraper'
+import type { NextApiRequest, NextApiResponse } from 'next'
 
 interface RuleArgs {
   htmlDom: typeof Cheerio
   url: string
+}
+
+function sanitizeTwitterHandle(handle: string | undefined): string | undefined {
+  if (!handle) {
+    return undefined
+  }
+  if (handle.includes(' ')) {
+    return undefined // Author name rather than handle
+  }
+  return handle.replace(/^@/, '')
 }
 
 const metascraper = Metascraper([
@@ -21,11 +31,13 @@ const metascraper = Metascraper([
   {
     twitter: [
       ({ htmlDom: $ }: RuleArgs) =>
-        $('meta[property="twitter:creator"]')
-          .attr('content')
-          ?.replace(/^@/, ''),
+        sanitizeTwitterHandle(
+          $('meta[property="twitter:creator"]').attr('content')
+        ),
       ({ htmlDom: $ }: RuleArgs) =>
-        $('meta[name="twitter:creator"]').attr('content')?.replace(/^@/, ''),
+        sanitizeTwitterHandle(
+          $('meta[name="twitter:creator"]').attr('content')
+        ),
     ],
   },
 ])
