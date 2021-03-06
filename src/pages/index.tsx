@@ -16,7 +16,6 @@ import {
   Table,
   Tbody,
   Td,
-  Text,
   Textarea,
   Th,
   Thead,
@@ -270,7 +269,6 @@ export default function Home() {
             </Tr>
           </Tbody>
         </Table>
-        <Text>{meta.date}</Text>
         <Button
           type="submit"
           colorScheme="green"
