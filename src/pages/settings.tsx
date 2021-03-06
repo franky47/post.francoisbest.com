@@ -1,5 +1,4 @@
-import React from 'react'
-import { NextPage } from 'next'
+import { OutgoingLink } from '@47ng/chakra-next'
 import {
   Button,
   Checkbox,
@@ -12,15 +11,17 @@ import {
   Input,
   Stack,
   Text,
+  useColorMode,
   useToast,
 } from '@chakra-ui/react'
+import { NextPage } from 'next'
+import React from 'react'
 import { FiUploadCloud } from 'react-icons/fi'
-import { OutgoingLink } from '@47ng/chakra-next'
-import { useLocalSetting } from 'src/hooks/useLocalSetting'
-import { useGitHubURL } from 'src/hooks/useGitHubURL'
-import { useGitRowsTest } from 'src/hooks/useGitRows'
 import { csvColumns, settings, settingsDefaults } from 'src/client/settings'
 import { Layout } from 'src/components/Layout'
+import { useGitHubURL } from 'src/hooks/useGitHubURL'
+import { useGitRowsTest } from 'src/hooks/useGitRows'
+import { useLocalSetting } from 'src/hooks/useLocalSetting'
 
 const SettingsPage: NextPage = () => {
   const toast = useToast({ variant: 'left-accent', position: 'bottom-right' })
@@ -28,6 +29,7 @@ const SettingsPage: NextPage = () => {
     settings.AUTO_UNFURL,
     false
   )
+  const { colorMode, setColorMode } = useColorMode()
   const [token, setToken] = useLocalSetting(settings.TOKEN)
   const [fileURL, setFileURL] = useLocalSetting(settings.FILE_URL)
   const [author, setAuthor] = useLocalSetting(
@@ -88,6 +90,14 @@ const SettingsPage: NextPage = () => {
           <FormHelperText>
             Automatically fetch metadata when pasting a link
           </FormHelperText>
+        </FormControl>
+        <FormControl>
+          <Checkbox
+            isChecked={colorMode === 'dark'}
+            onChange={(e) => setColorMode(e.target.checked ? 'dark' : 'light')}
+          >
+            Dark mode
+          </Checkbox>
         </FormControl>
         <Divider />
         <Heading as="h3" fontSize="2xl">
