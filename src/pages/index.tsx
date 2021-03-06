@@ -1,31 +1,40 @@
-import React from 'react'
+import { OutgoingLink } from '@47ng/chakra-next'
 import {
+  Box,
   Button,
   FormControl,
+  FormHelperText,
   FormLabel,
   Heading,
   IconButton,
+  Image,
   Input,
   InputGroup,
   InputRightElement,
-  Stack,
-  Textarea,
-  Box,
-  FormHelperText,
-  useToast,
   Spinner,
+  Stack,
+  Table,
+  Tbody,
+  Td,
+  Text,
+  Textarea,
+  Th,
+  Thead,
+  Tr,
+  useToast,
 } from '@chakra-ui/react'
-import type { Metadata } from 'metascraper'
+import React from 'react'
 import { FiCheckSquare, FiDownloadCloud, FiX } from 'react-icons/fi'
+import { useDebounce } from 'react-use'
+import { csvColumns, settings } from 'src/client/settings'
+import type { Metadata } from 'src/client/unfurl'
+import { unfurl } from 'src/client/unfurl'
+import { Layout } from 'src/components/Layout'
+import { OgImagePreview } from 'src/components/OgImagePreview'
+import { Stats, useStats } from 'src/components/Stats'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
 import { useGitRowsHasURL, useGitRowsPush } from 'src/hooks/useGitRows'
-import { unfurl } from 'src/client/unfurl'
-import { OgImagePreview } from 'src/components/OgImagePreview'
-import { Layout } from 'src/components/Layout'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
-import { csvColumns, settings } from 'src/client/settings'
-import { useDebounce } from 'react-use'
-import { Stats, useStats } from 'src/components/Stats'
 
 export default function Home() {
   useAuthRedirect()
@@ -223,6 +232,45 @@ export default function Home() {
           </Heading>
           <OgImagePreview loading={isUnfurling} src={meta.image ?? ''} />
         </Box>
+        <Table variant="simple" size="sm">
+          <Thead>
+            <Tr>
+              <Th>Property</Th>
+              <Th>Value</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            <Tr>
+              <Td>Publication Date</Td>
+              <Td>{meta.date}</Td>
+            </Tr>
+            <Tr>
+              <Td>Twitter</Td>
+              <Td>
+                <OutgoingLink href={`https://twitter.com/${meta.twitter}`}>
+                  {meta.twitter && `@${meta.twitter}`}
+                </OutgoingLink>
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>Language</Td>
+              <Td>{meta.lang}</Td>
+            </Tr>
+            <Tr>
+              <Td>Logo</Td>
+              <Td>
+                {meta.logo && (
+                  <Image
+                    src={meta.logo}
+                    alt="Website logo or icon"
+                    boxSize="24px"
+                  />
+                )}
+              </Td>
+            </Tr>
+          </Tbody>
+        </Table>
+        <Text>{meta.date}</Text>
         <Button
           type="submit"
           colorScheme="green"

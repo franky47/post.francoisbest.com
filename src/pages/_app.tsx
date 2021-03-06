@@ -1,6 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
+import { darken, getColor, mode } from '@chakra-ui/theme-tools'
 import { Dict } from '@chakra-ui/utils'
-import { getColor, mode, darken } from '@chakra-ui/theme-tools'
 import Head from 'next/head'
 import React from 'react'
 
