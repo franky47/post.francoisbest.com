@@ -119,7 +119,7 @@ const SettingsPage: NextPage = () => {
           <FormHelperText>
             Generate a{' '}
             <OutgoingLink
-              href="https://github.com/settings/tokens"
+              href="https://github.com/settings/tokens/new?scopes=repo,read:repo_hook&description=GitRows%20(post.francoisbest.com)"
               textDecor="underline"
             >
               Personal Access Token
