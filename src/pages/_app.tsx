@@ -6,11 +6,20 @@ import React from 'react'
 
 const theme = extendTheme({
   styles: {
-    global: () => ({
+    global: ({ colorMode }) => ({
       body: {
         position: 'static',
       },
+      'html, body': {
+        bg: colorMode === 'light' ? 'white' : 'gray.1000',
+        color: colorMode === 'light' ? 'gray.800' : 'gray.300',
+      },
     }),
+  },
+  colors: {
+    gray: {
+      1000: '#121721',
+    },
   },
   components: {
     Alert: {
