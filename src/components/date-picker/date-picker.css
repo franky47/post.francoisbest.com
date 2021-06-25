@@ -54,11 +54,11 @@
 }
 
 .react-datepicker__input-container {
-  font-size: 1rem;
-  padding-left: 1rem;
-  padding-right: 1rem;
-  height: 2.5rem;
-  border-radius: 0.25rem;
+  font-size: var(--chakra-fontSizes-xs);
+  padding-left: var(--chakra-space-2);
+  padding-right: var(--chakra-space-2);
+  height: var(--chakra-sizes-6);
+  border-radius: var(--chakra-radii-sm);
   border: 1px solid;
   border-color: var(--light-gray);
 }
