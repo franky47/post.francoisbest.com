@@ -20,7 +20,7 @@ import {
   Th,
   Thead,
   Tr,
-  useToast,
+  useToast
 } from '@chakra-ui/react'
 import React from 'react'
 import { FiCheckSquare, FiDownloadCloud, FiX } from 'react-icons/fi'
@@ -44,10 +44,11 @@ export default function Home() {
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
   const placeholder = isUnfurling ? 'Loading...' : undefined
   const checkDuplicate = useGitRowsHasURL()
-  const [duplicate, setDuplicate] = React.useState(false)
+  const [isDuplicate, setDuplicate] = React.useState(false)
   const push = useGitRowsPush(csvColumns)
   const [pushing, setPushing] = React.useState(false)
   const [stats, updateStats] = useStats()
+  const isSubmitButtonDisabled = !url || isDuplicate || isUnfurling
 
   useDebounce(
     () => {
@@ -141,7 +142,7 @@ export default function Home() {
               onChange={(e) => setUrl(e.target.value)}
               placeholder="https://example.com"
               size="lg"
-              isInvalid={duplicate}
+              isInvalid={isDuplicate}
               onPaste={(event) => {
                 event.preventDefault()
                 const pastedText = event.clipboardData.getData('text')
@@ -152,15 +153,15 @@ export default function Home() {
             />
             <InputRightElement boxSize={12}>
               <IconButton
-                onClick={duplicate ? reset : runUnfurling}
+                onClick={isDuplicate ? reset : runUnfurling}
                 rounded="full"
                 variant="ghost"
-                icon={duplicate ? <FiX /> : <FiDownloadCloud />}
-                aria-label={duplicate ? 'Clear' : 'Unfurl'}
+                icon={isDuplicate ? <FiX /> : <FiDownloadCloud />}
+                aria-label={isDuplicate ? 'Clear' : 'Unfurl'}
               />
             </InputRightElement>
           </InputGroup>
-          {duplicate && (
+          {isDuplicate && (
             <FormHelperText color="red.400">
               This link was already saved.
             </FormHelperText>
@@ -276,7 +277,7 @@ export default function Home() {
           size="lg"
           display={['none', 'flex']}
           isLoading={pushing}
-          isDisabled={!url || duplicate}
+          isDisabled={isSubmitButtonDisabled}
         >
           Post Link
         </Button>
@@ -294,7 +295,7 @@ export default function Home() {
           colorScheme="green"
           shadow="lg"
           isLoading={pushing}
-          isDisabled={duplicate}
+          isDisabled={isSubmitButtonDisabled}
         />
       </Stack>
     </Layout>
