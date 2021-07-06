@@ -20,10 +20,10 @@ import {
   Th,
   Thead,
   Tr,
-  useToast
+  useToast,
 } from '@chakra-ui/react'
 import React from 'react'
-import { FiCheckSquare, FiDownloadCloud, FiX } from 'react-icons/fi'
+import { FiCheckSquare, FiDownloadCloud, FiX, FiXCircle } from 'react-icons/fi'
 import { useDebounce } from 'react-use'
 import { csvColumns, settings } from 'src/client/settings'
 import type { Metadata } from 'src/client/unfurl'
@@ -211,7 +211,22 @@ export default function Home() {
           </InputGroup>
         </FormControl>
         <FormControl>
-          <FormLabel>Description</FormLabel>
+          <FormLabel d="flex" justifyContent="space-between" mr={0}>
+            <span>Description</span>
+            {!!meta.description && (
+              <Button
+                size="xs"
+                leftIcon={<FiXCircle />}
+                colorScheme="red"
+                variant="ghost"
+                onClick={() =>
+                  setMeta((meta) => ({ ...meta, description: undefined }))
+                }
+              >
+                Clear
+              </Button>
+            )}
+          </FormLabel>
           <Box pos="relative">
             <Textarea
               minH={[48, 32]}
