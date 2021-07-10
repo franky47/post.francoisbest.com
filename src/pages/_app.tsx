@@ -4,6 +4,9 @@ import { Dict } from '@chakra-ui/utils'
 import Head from 'next/head'
 import React from 'react'
 
+import 'react-datepicker/dist/react-datepicker.css'
+import 'src/components/date-picker/date-picker.css'
+
 const theme = extendTheme({
   styles: {
     global: ({ colorMode }) => ({

@@ -31,6 +31,7 @@ import { unfurl } from 'src/client/unfurl'
 import { Layout } from 'src/components/Layout'
 import { OgImagePreview } from 'src/components/OgImagePreview'
 import { Stats, useStats } from 'src/components/Stats'
+import { DatePicker } from 'src/components/date-picker/DatePicker'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
 import { useGitRowsHasURL, useGitRowsPush } from 'src/hooks/useGitRows'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
@@ -41,6 +42,7 @@ export default function Home() {
   const [url, setUrl] = React.useState('')
   const [autoUnfurl] = useLocalSetting(settings.AUTO_UNFURL, false)
   const [isUnfurling, setUnfurling] = React.useState(false)
+  const [postDate, setPostDate] = React.useState(new Date())
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
   const placeholder = isUnfurling ? 'Loading...' : undefined
   const checkDuplicate = useGitRowsHasURL()
@@ -94,6 +96,7 @@ export default function Home() {
   const reset = React.useCallback(() => {
     setUrl('')
     setMeta({})
+    setPostDate(new Date())
     window.scrollTo({ top: 0, behavior: 'smooth' })
     updateStats()
   }, [updateStats])
@@ -104,6 +107,7 @@ export default function Home() {
       setPushing(true)
       push(
         {
+          timestamp: postDate.getTime(),
           ...meta,
           url,
         },
@@ -123,7 +127,7 @@ export default function Home() {
         .catch(console.error)
         .finally(() => setPushing(false))
     },
-    [push, toast, reset, meta, url]
+    [push, toast, reset, meta, url, postDate]
   )
 
   React.useEffect(() => {
@@ -281,6 +285,22 @@ export default function Home() {
                     boxSize="24px"
                   />
                 )}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>
+                <label htmlFor="post-date">Post Date</label>
+              </Td>
+              <Td>
+                <DatePicker
+                  id="post-date"
+                  // ISO standard should be less confusing for the order of the dates https://en.wikipedia.org/wiki/ISO_8601
+                  dateFormat="yyyy-MM-dd"
+                  selected={postDate}
+                  onChange={(date: Date) =>
+                    date ? setPostDate(date) : setPostDate(new Date())
+                  }
+                />
               </Td>
             </Tr>
           </Tbody>

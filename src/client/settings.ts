@@ -14,6 +14,7 @@ export const settingsDefaults = {
 }
 
 export const csvColumns = [
+  'timestamp',
   'author',
   'date',
   'description',
