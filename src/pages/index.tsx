@@ -11,6 +11,7 @@ import {
   Input,
   InputGroup,
   InputRightElement,
+  InputLeftElement,
   Spinner,
   Stack,
   Table,
@@ -20,8 +21,10 @@ import {
   Th,
   Thead,
   Tr,
+  VisuallyHidden,
   useToast,
 } from '@chakra-ui/react'
+import { ExternalLinkIcon } from '@chakra-ui/icons'
 import React from 'react'
 import { FiCheckSquare, FiDownloadCloud, FiX, FiXCircle } from 'react-icons/fi'
 import { useDebounce } from 'react-use'
@@ -31,6 +34,7 @@ import { unfurl } from 'src/client/unfurl'
 import { Layout } from 'src/components/Layout'
 import { OgImagePreview } from 'src/components/OgImagePreview'
 import { Stats, useStats } from 'src/components/Stats'
+import { DatePicker } from 'src/components/date-picker/DatePicker'
 import { useAuthRedirect } from 'src/hooks/useAuthRedirect'
 import { useGitRowsHasURL, useGitRowsPush } from 'src/hooks/useGitRows'
 import { useLocalSetting } from 'src/hooks/useLocalSetting'
@@ -41,6 +45,7 @@ export default function Home() {
   const [url, setUrl] = React.useState('')
   const [autoUnfurl] = useLocalSetting(settings.AUTO_UNFURL, false)
   const [isUnfurling, setUnfurling] = React.useState(false)
+  const [postDate, setPostDate] = React.useState(new Date())
   const [meta, setMeta] = React.useState<Partial<Metadata>>({})
   const placeholder = isUnfurling ? 'Loading...' : undefined
   const checkDuplicate = useGitRowsHasURL()
@@ -94,6 +99,7 @@ export default function Home() {
   const reset = React.useCallback(() => {
     setUrl('')
     setMeta({})
+    setPostDate(new Date())
     window.scrollTo({ top: 0, behavior: 'smooth' })
     updateStats()
   }, [updateStats])
@@ -104,6 +110,7 @@ export default function Home() {
       setPushing(true)
       push(
         {
+          timestamp: postDate.getTime(),
           ...meta,
           url,
         },
@@ -123,7 +130,7 @@ export default function Home() {
         .catch(console.error)
         .finally(() => setPushing(false))
     },
-    [push, toast, reset, meta, url]
+    [push, toast, reset, meta, url, postDate]
   )
 
   React.useEffect(() => {
@@ -260,16 +267,62 @@ export default function Home() {
               <Td>{meta.date}</Td>
             </Tr>
             <Tr>
-              <Td>Twitter</Td>
               <Td>
-                <OutgoingLink href={`https://twitter.com/${meta.twitter}`}>
-                  {meta.twitter && `@${meta.twitter}`}
-                </OutgoingLink>
+                <label htmlFor="twitter">Twitter</label>
+              </Td>
+              <Td display="flex" alignItems="center">
+                <InputGroup size="xs">
+                  <InputLeftElement pointerEvents="none">@</InputLeftElement>
+                  <Input
+                    id="twitter"
+                    placeholder={placeholder}
+                    value={meta.twitter ?? ''}
+                    onChange={(e) =>
+                      setMeta((meta) => ({ ...meta, twitter: e.target.value }))
+                    }
+                  />
+                  {isUnfurling && (
+                    <InputRightElement>
+                      <Box>
+                        <Spinner size="sm" />
+                      </Box>
+                    </InputRightElement>
+                  )}
+                </InputGroup>
+                {meta.twitter ? (
+                  <OutgoingLink
+                    href={`https://twitter.com/${meta.twitter}`}
+                    mx={2}
+                  >
+                    <VisuallyHidden>{`@${meta.twitter}`}</VisuallyHidden>
+                    <ExternalLinkIcon />
+                  </OutgoingLink>
+                ) : null}
               </Td>
             </Tr>
             <Tr>
-              <Td>Language</Td>
-              <Td>{meta.lang}</Td>
+              <Td>
+                <label htmlFor="language">Language</label>
+              </Td>
+              <Td>
+                <InputGroup size="xs">
+                  <Input
+                    id="language"
+                    placeholder={placeholder}
+                    value={meta.lang ?? ''}
+                    onChange={(e) =>
+                      setMeta((meta) => ({ ...meta, lang: e.target.value }))
+                    }
+                  />
+                  {isUnfurling && (
+                    <InputRightElement>
+                      <Box>
+                        <Spinner size="sm" />
+                      </Box>
+                    </InputRightElement>
+                  )}
+                </InputGroup>
+              </Td>
             </Tr>
             <Tr>
               <Td>Logo</Td>
@@ -281,6 +334,22 @@ export default function Home() {
                     boxSize="24px"
                   />
                 )}
+              </Td>
+            </Tr>
+            <Tr>
+              <Td>
+                <label htmlFor="post-date">Post Date</label>
+              </Td>
+              <Td>
+                <DatePicker
+                  id="post-date"
+                  // ISO standard should be less confusing for the order of the dates https://en.wikipedia.org/wiki/ISO_8601
+                  dateFormat="yyyy-MM-dd"
+                  selected={postDate}
+                  onChange={(date: Date) =>
+                    date ? setPostDate(date) : setPostDate(new Date())
+                  }
+                />
               </Td>
             </Tr>
           </Tbody>

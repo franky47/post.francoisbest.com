@@ -79,13 +79,12 @@ export function useGitRowsHasURL() {
 export function useGitRowsPush<T>(columns: (keyof T)[]) {
   const [fileUrl] = useLocalSetting(settings.FILE_URL)
   const gitrows = useGitRows()
-  return (data: Partial<T>, options: object = {}) => {
+  return (payload: Partial<T>, options: object = {}) => {
     const _options = {
       columns: ['timestamp', ...columns],
       ...options,
     }
     gitrows!.options(_options)
-    const payload = { timestamp: Date.now(), ...data }
     // todo: Remove this when gitrows/gitrows#12 is fixed
     for (const column of columns) {
       if (!payload[column]) {
